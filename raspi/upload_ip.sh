@@ -15,6 +15,6 @@ git add raspi/ip.md
 git commit --allow-empty -m "update ip"
 git push
 
-echo "script was successfully triggered by $(whoami)" > log.txt
+echo "script was successfully triggered by $(whoami)" >> log.txt
 
 cd -
