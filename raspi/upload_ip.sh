@@ -1,8 +1,12 @@
 #!/bin/bash
 
 cd /home/student334/Desktop/CPSC-334
-hostname -I > raspi/ip.md
-git add raspi/ip.md
-git commit -m "update ip address"
-git push
+if ! git diff-index --quiet HEAD --; then
+	git add ip.md
+	git commit -m "update ip"
+	git push
+fi
 cd -
+
+echo "script was triggered by ${whoami}" > log.txt
+$ip_address >> log.txt
