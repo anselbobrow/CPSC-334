@@ -10,5 +10,12 @@
   },
   "keywords": [],
   "author": "Ansel Bobrow",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "p5": "^1.4.2"
+  },
+  "devDependencies": {
+    "@types/p5": "^1.4.2",
+    "parcel": "^2.7.0"
+  }
 }
