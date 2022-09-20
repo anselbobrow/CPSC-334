@@ -3,11 +3,10 @@ import { Line } from './customTypes';
 
 let prevPoint: p5.Vector;
 let paused = false;
-const border_urls = ['../img/border_1.jpg', '../img/border_2.jpg', '../img/border_3.jpg'];
 let border_imgs: p5.Image[] = [];
 
 // parameters, play with these!
-const TAIL_LENGTH = 10;
+let TAIL_LENGTH = 10;
 const LINE_LENGTH = 100;
 const SPEED = 10;
 
@@ -25,7 +24,7 @@ const sketch = (p: p5) => {
         const urls: URL[] = [];
 
         urls.push(new URL(
-            'img/border_1.jpg',
+            'img/border_1.jpg', // must be a string literal
             import.meta.url
         ));
 
@@ -47,7 +46,7 @@ const sketch = (p: p5) => {
     p.setup = () => {
         p.createCanvas(WIDTH, HEIGHT);
         p.stroke('white');
-        p.strokeWeight(3);
+        p.strokeWeight(5);
         p.frameRate(SPEED);
 
         // line starts from the middle of the screen
@@ -82,6 +81,11 @@ const sketch = (p: p5) => {
             for (let l of lineQueue) {
                 p.line(l.x1, l.y1, l.x2, l.y2);
             }
+
+            // increase tail length as time goes on
+            if (p.frameCount % 10 == 0) {
+                TAIL_LENGTH += 1;
+            }
         }
     };
 
@@ -89,10 +93,14 @@ const sketch = (p: p5) => {
         paused = !paused;
     }
 
+    // reset on click
     p.mouseClicked = () => {
-        pause();
+        TAIL_LENGTH = 10;
+        lineQueue = [];
+        p.setup();
     }
 
+    // pause on space
     p.keyTyped = (e: KeyboardEvent) => {
         if (e.key == " ") {
             pause();
