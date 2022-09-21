@@ -8,7 +8,8 @@ let border_imgs: p5.Image[] = [];
 // parameters, play with these!
 let TAIL_LENGTH = 10;
 const LINE_LENGTH = 100;
-const SPEED = 10;
+const SPEED = 25;
+const LINE_HISTORY = 50;
 
 // screen size setup
 const WIDTH = 1360;
@@ -44,7 +45,7 @@ const sketch = (p: p5) => {
     }
 
     p.setup = () => {
-        p.createCanvas(WIDTH, HEIGHT);
+        p.createCanvas(WIDTH * 6, HEIGHT);
         p.stroke('white');
         p.strokeWeight(5);
         p.frameRate(SPEED);
@@ -63,6 +64,22 @@ const sketch = (p: p5) => {
                 newY = LINE_LENGTH * p.sin(randAngle) + prevPoint.y;
             } while (newX < 0 + INSET || newX > WIDTH - INSET || newY < 0 + INSET || newY > HEIGHT - INSET)
 
+            // display border images
+            for (let i = 0; i < 6; i++) {
+                p.image(border_imgs[background_number], WIDTH * i, 0);
+            }
+            background_number = (background_number + 1) % 3;
+
+            // display all lines
+            for (let i = 0; i < 6; i++) {
+                lineQueue.forEach((l, idx) => {
+                    let xoffset = WIDTH * i;
+                    if (lineQueue.length - idx > i && idx > 5 - i) {
+                        p.line(l.x1 + xoffset, l.y1, l.x2 + xoffset, l.y2);
+                    }
+                });
+            }
+
             // create new line based on above random direction, add it to the queue
             const line = new Line(prevPoint.x, prevPoint.y, newX, newY);
             lineQueue.push(line);
@@ -71,21 +88,12 @@ const sketch = (p: p5) => {
                 lineQueue.shift();
             }
 
-            prevPoint = new p5.Vector(newX, newY);
-
-            // display all lines
-            // TODO: custom backgrounds
-            p.background(border_imgs[background_number]);
-            background_number = (background_number + 1) % 3;
-
-            for (let l of lineQueue) {
-                p.line(l.x1, l.y1, l.x2, l.y2);
-            }
-
             // increase tail length as time goes on
             if (p.frameCount % 10 == 0) {
                 TAIL_LENGTH += 1;
             }
+
+            prevPoint = new p5.Vector(newX, newY);
         }
     };
 
