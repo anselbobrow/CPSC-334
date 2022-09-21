@@ -11,4 +11,4 @@ press `space` to pause and resume animation
 
 click or refresh page to restart
 
-adjust the parameters such as `SPEED`, `MAX_DELAY_DEPTH`, `LINE_LENGTH`, or `DELAY_PERIOD` in `src/sketch.ts`
+adjust the parameters such as `SPEED`, `MAX_DELAY_DEPTH`, `LINE_LENGTH`, or `DELAY_PERIOD` in `src/sketch.ts` and save file to reload server
