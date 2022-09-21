@@ -24,7 +24,6 @@ let lineQueue: Line[] = [];
 let lineHistory: Line[][] = [];
 let background_number = 0;
 let delay = 0;
-let prevIndeces: number[] = [];
 
 const sketch = (p: p5) => {
     p.preload = () => {
