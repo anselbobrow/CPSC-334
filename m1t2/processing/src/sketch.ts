@@ -11,7 +11,7 @@ const LINE_LENGTH = 100;
 const SPEED = 10;
 const MAX_DELAY_DEPTH = 10;
 // period (in frames) of a full cycle from no delay to full delay to no delay
-const DELAY_PERIOD = 100;
+const DELAY_PERIOD = 600;
 const HISTORY_LENGTH = MAX_DELAY_DEPTH * 5 + 1;
 
 // screen size setup
@@ -24,6 +24,7 @@ let lineQueue: Line[] = [];
 let lineHistory: Line[][] = [];
 let background_number = 0;
 let delay = 0;
+let prevIndeces: number[] = [];
 
 const sketch = (p: p5) => {
     p.preload = () => {
@@ -97,6 +98,9 @@ const sketch = (p: p5) => {
             }
             background_number = (background_number + 1) % 3;
 
+            // adjust delay speed as a sin function of current frame
+            delay = Math.round(p.sin(p.frameCount * p.PI / DELAY_PERIOD) * MAX_DELAY_DEPTH / 2 + MAX_DELAY_DEPTH / 2);
+
             // display all lines
             for (let i = 0; i < 6; i++) {
                 let idx = i * delay;
@@ -108,10 +112,6 @@ const sketch = (p: p5) => {
                     })
                 }
             }
-
-            // adjust delay speed as a sin function of current frame
-            delay = Math.round(p.sin(p.frameCount * p.PI / DELAY_PERIOD) * MAX_DELAY_DEPTH / 2 + MAX_DELAY_DEPTH / 2);
-            console.log(delay);
         }
     };
 
