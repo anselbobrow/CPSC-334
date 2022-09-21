@@ -9,7 +9,8 @@ let border_imgs: p5.Image[] = [];
 let TAIL_LENGTH = 10;
 const LINE_LENGTH = 100;
 const SPEED = 25;
-const LINE_HISTORY = 50;
+let MAX_DELAY_DEPTH = 10;
+const HISTORY_LENGTH = MAX_DELAY_DEPTH * 5 + 1;
 
 // screen size setup
 const WIDTH = 1360;
@@ -18,6 +19,7 @@ const INSET = 25;
 
 // state
 let lineQueue: Line[] = [];
+let lineHistory: Line[][] = [];
 let background_number = 0;
 
 const sketch = (p: p5) => {
@@ -64,28 +66,19 @@ const sketch = (p: p5) => {
                 newY = LINE_LENGTH * p.sin(randAngle) + prevPoint.y;
             } while (newX < 0 + INSET || newX > WIDTH - INSET || newY < 0 + INSET || newY > HEIGHT - INSET)
 
-            // display border images
-            for (let i = 0; i < 6; i++) {
-                p.image(border_imgs[background_number], WIDTH * i, 0);
-            }
-            background_number = (background_number + 1) % 3;
-
-            // display all lines
-            for (let i = 0; i < 6; i++) {
-                lineQueue.forEach((l, idx) => {
-                    let xoffset = WIDTH * i;
-                    if (lineQueue.length - idx > i && idx > 5 - i) {
-                        p.line(l.x1 + xoffset, l.y1, l.x2 + xoffset, l.y2);
-                    }
-                });
-            }
-
             // create new line based on above random direction, add it to the queue
             const line = new Line(prevPoint.x, prevPoint.y, newX, newY);
             lineQueue.push(line);
+
             // trim lines off the end to keep tail length under control
             if (lineQueue.length > TAIL_LENGTH) {
                 lineQueue.shift();
+            }
+
+            // add new lines queues to history
+            lineHistory.unshift([...lineQueue]);
+            if (lineHistory.length > HISTORY_LENGTH) {
+                lineHistory.pop();
             }
 
             // increase tail length as time goes on
@@ -94,6 +87,24 @@ const sketch = (p: p5) => {
             }
 
             prevPoint = new p5.Vector(newX, newY);
+
+            // display border images
+            for (let i = 0; i < 6; i++) {
+                p.image(border_imgs[background_number], WIDTH * i, 0);
+            }
+            background_number = (background_number + 1) % 3;
+
+            // display all lines
+            for (let i = 0; i < 6; i++) {
+                let idx = i * MAX_DELAY_DEPTH;
+                if (idx < lineHistory.length) {
+                    let lq = lineHistory[idx];
+                    let xoffset = WIDTH * i;
+                    lq.forEach(l => {
+                        p.line(l.x1 + xoffset, l.y1, l.x2 + xoffset, l.y2);
+                    })
+                }
+            }
         }
     };
 
@@ -105,7 +116,6 @@ const sketch = (p: p5) => {
     p.mouseClicked = () => {
         TAIL_LENGTH = 10;
         lineQueue = [];
-        p.setup();
     }
 
     // pause on space
