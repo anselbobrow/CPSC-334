@@ -1,4 +1,4 @@
-# Animated Line Art
+# [Animated Line Art](https://anselbobrow.com/line-art/)
 ## Installation
 clone, cd into directory, make sure node is installed and run
 
@@ -12,3 +12,7 @@ press `space` to pause and resume animation
 click or refresh page to restart
 
 adjust the parameters such as `SPEED`, `MAX_DELAY_DEPTH`, `LINE_LENGTH`, or `DELAY_PERIOD` in `src/sketch.ts` and save file to reload server
+
+## Demonstration
+A video demonstration of the installation at Yale's CCAM.
+[https://youtu.be/GC2ikWnkc18](https://youtu.be/GC2ikWnkc18)
