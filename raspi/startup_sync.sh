@@ -6,6 +6,8 @@ git pull
 
 hostname -I > raspi/ip.md
 
-git add raspi/ip.md
-git commit -m "update ip"
+cp ~/.bashrc config/.bashrc
+
+git add -A
+git commit --allow-empty -m "update ip"
 git push
