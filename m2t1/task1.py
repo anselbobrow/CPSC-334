@@ -47,20 +47,30 @@ def main(stdscr):
             for i in range(pos_y + 1, term_height):
                 stdscr.addstr(i, 0, '#' * (term_len - 1))
 
-            if joystick_x.is_active:
+            jx = jy = True
+            if switch.is_active:
+                # gravity reverse!!!
+                jx = joystick_x.is_active
+                jy = joystick_y.is_active
+            else:
+                jx = not joystick_x.is_active
+                jy = not joystick_y.is_active
+
+            if jx:
                 if 0 < pos_x:
                     pos_x -= 1
             else:
                 if pos_x < term_len - 2:
                     pos_x += 1
 
-            if joystick_y.is_active:
+            if jy:
                 if 0 < pos_y:
                     pos_y -= 1
             else:
                 if pos_y < term_height - 2:
                     pos_y += 1
         if mode == 1:
+            continue
             # mode 2
         if mode == 2:
             continue
