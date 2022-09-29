@@ -1,10 +1,18 @@
 #!/usr/bin/env python
 
+# RASPIAN USAGE: first install pyaudio for mode 3 to work
+# also adjust GPIO as necessary for your physical configuration
+# IMPORTANT: audio will play through raspi 3.5 mm jack, use `alsamixer` to TURN DOWN THE VOLUME
+
+# $ pip install pyaudio
+
 import os
 import curses
 from time import sleep
 from sys import stdout
 from gpiozero import Button, PWMLED
+import pyaudio
+import numpy as np
 
 # handle GPIO
 button = Button(2)
@@ -44,6 +52,21 @@ def main(stdscr):
     curses.init_pair(5, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(6, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
     curses.init_pair(7, curses.COLOR_BLACK, curses.COLOR_WHITE)
+
+    # state for mode 3 (audio code based on https://stackoverflow.com/questions/8299303/generating-sine-wave-sound-in-python)
+    p = pyaudio.PyAudio()
+    volume = 0.25  # range [0.0, 1.0]
+    fs = 44100  # sampling rate, Hz, must be integer
+    duration = 0.5  # in seconds, may be float
+    freqs = [
+        130.81, 138.59, 146.83, 155.56, 164.81, 174.61, 185.00, 196.00, 207.65,
+        220.00, 233.08, 246.94
+    ]
+    current_note = 0
+
+    # for paFloat32 sample values must be in range [-1.0, 1.0]
+    stream = p.open(format=pyaudio.paFloat32, channels=1, rate=fs, output=True)
+
     while True:
         if mode == 0:
             # mode 1: move circle around screen across x, y coordinates, switch controls character
@@ -98,41 +121,27 @@ def main(stdscr):
                               color_mode | curses.color_pair(color_pair))
 
         elif mode == 2:
-            # mode 3
-            continue
+            # mode 3: play sine wave, joystick controls frequency (hold button for a little longer than normal to switch modes
+            # hold joystick to stop, switch toggles up an octave
+
+            # again, code taken from https://stackoverflow.com/questions/8299303/generating-sine-wave-sound-in-python
+            while True:
+                if button.is_pressed:
+                    break
+                # switch jumps up an octave
+                f = freqs[current_note] * 2 if switch.is_active else freqs[
+                    current_note]
+                samples = (np.sin(2 * np.pi * np.arange(fs * duration) * f /
+                                  fs)).astype(np.float32)
+                stream.write((volume * samples).tobytes())
+                if not joystick.is_active:
+                    if joystick_x.is_active:
+                        current_note = (current_note - 1) % len(freqs)
+                    else:
+                        current_note = (current_note + 1) % len(freqs)
 
         # update the screen after each loop
         stdscr.refresh()
 
 
 curses.wrapper(main)
-# while True:
-#    if button.is_pressed:
-#        print("Button is pressed")
-#    else:
-#        print("Button is not pressed")
-#    if switch.is_pressed:
-#        print("Switch is on")
-#    else:
-#        print("Switch is off")
-#    if joystick.is_pressed:
-#        print("Joystick is pressed")
-#    else:
-#        print("Joystick is not pressed")
-# if joystick_x.is_pressed:
-#     print("Joystick is left")
-# else:
-#     print("Joystick is not left")
-# if joystick_y.is_pressed:
-#     print("Joystick is up")
-# else:
-#     print("Joystick is not up")
-# time.sleep(0.5)
-
-# spinner
-# sys.stdout.write(' ')
-# while True:
-#     for c in ('/', '-', '\\', '|'):
-#         time.sleep(1)
-#         sys.stdout.write('\b' + c)
-#         sys.stdout.flush()
