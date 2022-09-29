@@ -28,6 +28,15 @@ def main(stdscr):
     # curses initialization
     stdscr.clear()
     curses.curs_set(0)  # hide the cursor
+    term_len = curses.COLS
+    term_height = curses.LINES
+
+    # state for mode 1
+    pos_x = term_len - 2  # for some reason curses has a problem with drawing in the bottom-most box
+    pos_y = term_height - 2
+
+    # state for mode 2
+    color_pair = 0
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_GREEN, curses.COLOR_BLACK)
@@ -35,15 +44,6 @@ def main(stdscr):
     curses.init_pair(5, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(6, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
     curses.init_pair(7, curses.COLOR_BLACK, curses.COLOR_WHITE)
-    term_len = curses.COLS
-    term_height = curses.LINES
-
-    # initial state for mode 1
-    pos_x = term_len - 2  # for some reason curses has a problem with drawing in the bottom-most box
-    pos_y = term_height - 2
-
-    # initial state for mode 2
-    color_pair = 0
     while True:
         if mode == 0:
             # mode 1: move circle around screen across x, y coordinates, switch controls character
@@ -82,20 +82,22 @@ def main(stdscr):
                 if pos_y < term_height - 2:
                     pos_y += 1
             sleep(0.1)
-        if mode == 1:
+
+        elif mode == 1:
             # mode 2: cycle through colors, (cycle backwards if joystick_x held)
             # holding joystick button pauses cycle, switch turns on reverse video
+            sleep(1)
             color_mode = curses.A_REVERSE if switch.is_active else curses.A_NORMAL
-            for i in range(term_height - 1):
-                stdscr.addstr(i, 0, '#' * term_len,
-                              color_mode | curses.color_pair(color_pair))
             if not joystick.is_active:
                 if joystick_x.is_active:
                     color_pair = (color_pair + 1) % 8
                 else:
                     color_pair = (color_pair - 1) % 8
-            sleep(1)
-        if mode == 2:
+            for i in range(term_height - 1):
+                stdscr.addstr(i, 0, '#' * term_len,
+                              color_mode | curses.color_pair(color_pair))
+
+        elif mode == 2:
             # mode 3
             continue
 
