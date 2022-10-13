@@ -10,25 +10,30 @@ const int udpPort = 5070;
 WiFiUDP udp;
 boolean connected = false;
 
-int sensorPin = 13;
-int sensorValue = 0;
+int photoresistorPin = 32;
+int piezoPin = 35;
+int photoresistorValue = 0;
+int piezoValue = 0;
 
 void setup() {
   Serial.begin(115200);
   connectToWiFi(networkName, networkPswd);
 
-  pinMode(sensorPin, INPUT);
+  pinMode(photoresistorPin, INPUT);
+  pinMode(piezoPin, INPUT);
 }
 
 void loop() {
   // read the value from the photoresistor
-  sensorValue = analogRead(sensorPin);
-  Serial.println(sensorValue);
+  photoresistorValue = analogRead(photoresistorPin);
+  piezoValue = analogRead(piezoPin);
+  // Serial.println(photoresistorValue);
+  // Serial.println(piezoValue);
 
   if(connected){
     //Send a packet
     udp.beginPacket(udpAddress,udpPort);
-    udp.printf("Sensor Value: %d", sensorValue);
+    udp.printf("[%d,%d]", photoresistorValue, piezoValue);
     udp.endPacket();
   }
 
