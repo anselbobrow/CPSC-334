@@ -5,22 +5,29 @@
 // wifi configuration
 const char * networkName = "yale wireless";
 const char * networkPswd = "";
-const char * udpAddress = "172.29.31.240"; // ip address of target (raspi)
+// const char * udpAddress = "172.27.117.153"; // ip address of target (raspi)
+const char * udpAddress = "172.27.114.61"; // ip address of target (macbook)
 const int udpPort = 57120; // default port for SC to listen for OSC messages
 
 WiFiUDP udp;
 boolean connected = false;
 
 // photoresistor pins (make sure not impacted by wifi)
-int r1 = 12;
-int r2 = 14;
-int r3 = 27;
-int r4 = 26;
+int r1 = 34;
+int r2 = 35;
+int r3 = 32;
+int r4 = 33;
+int r5 = 25;
 
 void setup() {
   analogReadResolution(12);
   Serial.begin(115200);
   connectToWiFi(networkName, networkPswd);
+  pinMode(r1, INPUT_PULLUP);
+  pinMode(r2, INPUT_PULLUP);
+  pinMode(r3, INPUT_PULLUP);
+  pinMode(r4, INPUT_PULLUP);
+  pinMode(r5, INPUT_PULLUP);
 }
 
 void loop() {
@@ -29,6 +36,7 @@ void loop() {
   int r2val = analogRead(r2);
   int r3val = analogRead(r3);
   int r4val = analogRead(r4);
+  int r5val = analogRead(r5);
 
   if (connected) {
     // create osc message
@@ -37,6 +45,7 @@ void loop() {
     message.add(r2val);
     message.add(r3val);
     message.add(r4val);
+    message.add(r5val);
     
     // send UDP packet with OSC message
     udp.beginPacket(udpAddress, udpPort);

@@ -1,5 +1,6 @@
 log.txt
 .parcel-cache
-
+.DS_Store
+*.pdf
 dist/
 node_modules/
