@@ -1,5 +1,5 @@
 # [Animated Line Art](https://anselbobrow.com/line-art/)
-![example.jpg][./example.jpg]
+![example.jpg](./example.jpg)
 ## Installation
 clone, cd into directory, make sure node is installed and run
 
