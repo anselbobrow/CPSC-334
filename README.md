@@ -1,6 +1,6 @@
 # CPSC-334
 ## About
-This repo is an archive of the projects created for Scott Petersen's course Creative Embedded Systems (CPSC 334) at Yale during the fall 2022 semester. The course is divided into modules that focus on different mechanics of the embedded devices at our disposal in the context of installation art and other creative uses.
+This repo is an archive of the projects created for [@scotterikpetersen](https://github.com/scottericpetersen)'s course Creative Embedded Systems (CPSC 334) at Yale during the fall 2022 semester. The course is divided into modules that focus on different mechanics of the embedded devices at our disposal in the context of installation art and other creative uses.
 
 ## Usage
 ### `mxtx/`
