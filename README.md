@@ -9,3 +9,5 @@ The course is divided into modules and tasks, whose code can be found in the cor
 ### `labx/`
 Directories labeled `labx/` store the code written during that lab, as well as lab notes that describe useful findings and resources used in the lab. These labs often serve as the foundation for a subsequent Task 1, so most or all of the code may be the same in some cases.
 
+### `raspi/`
+This directory stores config files and dotfiles for the Raspberry Pi. The Pi used in this class was a Pi 4 model B with 4GB RAM. Files in this directory are universal to the course, Pi setup specific to projects (installing necessary libraries or software, running on boot, etc.) can be found in the individual project directories. 
