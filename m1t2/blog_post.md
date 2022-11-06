@@ -42,15 +42,15 @@ The way the delay is implemented is by storing a history (similar to an undo his
 ```jsx
 // display all lines
 for (let slide = 0; slide < 6; slide++) {
-		// determine where to query in the history for each slide
+    // determine where to query in the history for each slide
     let history_index = slide * delay;
-		// make sure that there is enough history to query from
+    // make sure that there is enough history to query from
     if (history_index < lineHistory.length) {
-				// grab the set of lines from that index
+	// grab the set of lines from that index
         let lineSet = lineHistory[history_index];
-				// make sure we're drawing on the correct slide with this x offset
+	// make sure we're drawing on the correct slide with this x offset
         let xoffset = WIDTH * i;
-				// draw each line from the set
+	// draw each line from the set
         lineSet.forEach(line => {
             p.line(line.x1 + xoffset, line.y1, line.x2 + xoffset, line.y2);
         })
