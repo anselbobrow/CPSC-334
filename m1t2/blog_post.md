@@ -1,6 +1,4 @@
-# Animated Line Art - Ansel Bobrow
-
-Author: Ansel Bobrow
+# Animated Line Art
 
 ## Task 1
 
@@ -33,8 +31,7 @@ As you can see, the extensive video delay modules each stored the delayed frames
 I realized I’d have to code the delay into the processing application, so I set about duplicating the slide to create 6 copies that could then run on the CCAM computer directly from the web, no Isadora. This inspired me to do something more interesting than just a simple delay, so I coded up a frame delay that varies over time according to a sin function, meaning that the individual slides start out of sync, then slowly fade into sync, then fall back out again, etc. Both the period and max delay time of this effect are defined as macros in terms of frames at the beginning of the code and can be played around with. This is easier to visualize in the video demonstration below. Here is the line that calculates the new delay time each frame.
 
 ```jsx
-delay = Math.round(p.sin(p.frameCount * p.PI / DELAY_PERIOD)
-									 * MAX_DELAY_DEPTH / 2 + MAX_DELAY_DEPTH / 2);
+delay = Math.round(p.sin(p.frameCount * p.PI / DELAY_PERIOD) * MAX_DELAY_DEPTH / 2 + MAX_DELAY_DEPTH / 2);
 ```
 
 The way the delay is implemented is by storing a history (similar to an undo history) of each set of lines that have been displayed in the past several frames. Then based on the depth, each slide shows a snapshot of some point in that history. This is the best way I could come up with to allow easily creating a variable delay depth, but it’s not super clean. If you look at the last slide (far right) with the most variation in delay (from 0 to MAX_DELAY_DEPTH * 5 frames), it jumps around a lot in the history as a result of whiplash. Sometimes it glitches back in time to slow down and sometimes it jumps ahead 5 line segments at a time, but when the speed is set fast enough it’s a little less noticeable. To mitigate the back-in-time glitch when delay time is being increased, I suppose I could just have the slide wait a few frames and then continue to move instead of replaying the last 5 or so frames, but I wasn’t sure of a good way to have it grow faster to catch up when the delay speed is being reduced, so I decided not to fix it. Here is the code that determines which set of lines to display on each slide based on the current delay length.
@@ -42,15 +39,15 @@ The way the delay is implemented is by storing a history (similar to an undo his
 ```jsx
 // display all lines
 for (let slide = 0; slide < 6; slide++) {
-		// determine where to query in the history for each slide
+    // determine where to query in the history for each slide
     let history_index = slide * delay;
-		// make sure that there is enough history to query from
+    // make sure that there is enough history to query from
     if (history_index < lineHistory.length) {
-				// grab the set of lines from that index
+	// grab the set of lines from that index
         let lineSet = lineHistory[history_index];
-				// make sure we're drawing on the correct slide with this x offset
+	// make sure we're drawing on the correct slide with this x offset
         let xoffset = WIDTH * i;
-				// draw each line from the set
+	// draw each line from the set
         lineSet.forEach(line => {
             p.line(line.x1 + xoffset, line.y1, line.x2 + xoffset, line.y2);
         })
