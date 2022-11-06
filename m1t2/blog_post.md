@@ -1,6 +1,4 @@
-# Animated Line Art - Ansel Bobrow
-
-Author: Ansel Bobrow
+# Animated Line Art
 
 ## Task 1
 
