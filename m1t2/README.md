@@ -5,6 +5,9 @@ A video demonstration of the installation at Yale's CCAM.
 
 [![YouTube demonstration video](./blog_content/example.jpg)](https://youtu.be/GC2ikWnkc18)
 
+## About
+The inspiration and implementation details are written up in the [blog post](./blog_post.md).
+
 ## Installation
 clone, cd into directory, make sure node is installed and run
 
