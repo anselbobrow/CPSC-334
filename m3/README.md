@@ -1,7 +1,7 @@
 # Synesthesia Box
 
 ## About
-See [blog_post.md](./blog_post.md)
+See [blog_post.md](./blog_post.md) for implementation and inspiration details.
 
 ## Raspberry Pi Setup
     
