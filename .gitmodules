@@ -1,3 +1,6 @@
 [submodule "m1t1/cs334.a1"]
 	path = m1t1/cs334.a1
 	url = https://github.com/evankirkiles/cs334.a1.git
+[submodule "m4t2/CPSC334-M4T2"]
+	path = m4t2/CPSC334-M4T2
+	url = https://github.com/anselbobrow/CPSC334-M4T2.git
